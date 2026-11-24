@@ -216,6 +216,46 @@ h1,h2,h3{line-height:1.4;letter-spacing:.04em;font-feature-settings:"palt"}
 .btn{letter-spacing:.06em}
 .in{letter-spacing:.02em}
 
+/* ---- 分量の換算 ---- */
+.box h3{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap}
+.scale{display:inline-flex;align-items:center;border:1px solid var(--ink);border-radius:999px;font-family:"Zen Kaku Gothic New",sans-serif;font-size:13.5px;letter-spacing:.04em;font-weight:500}
+.scale button{width:40px;height:36px;border:0;background:none;font-size:18px}
+.scale span{min-width:4.5em;text-align:center;white-space:nowrap}
+.scale.chg span{color:var(--tom);font-weight:700}
+.steph{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.steph .btn{min-height:38px;padding:0 14px;font-size:13.5px}
+/* ---- カレンダー ---- */
+.shead .calnav{margin-left:auto;display:flex;gap:4px}
+.calnav button{width:40px;height:40px;border:1px solid var(--line);background:var(--card);border-radius:50%;font-size:18px}
+.cal .wk,.cal .days{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:4px}
+.cal .wk span{text-align:center;font-size:11.5px;color:var(--mute);padding-bottom:4px}
+.cal .wk span:first-child{color:var(--tom)}
+.day{position:relative;aspect-ratio:1;border:0;padding:0;background:var(--soft);overflow:hidden;font-size:12px;color:var(--mute);border-radius:3px}
+.day:disabled{cursor:default;background:transparent;box-shadow:inset 0 0 0 1px var(--line)}
+.day img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.day span{position:absolute;left:4px;top:2px;line-height:1.4}
+.day.on{background:var(--tom);color:#fff}
+.day.on img+span{color:#fff;text-shadow:0 1px 4px rgba(0,0,0,.7)}
+.day em{position:absolute;right:3px;bottom:3px;font-style:normal;background:var(--mus);color:#2a1d00;font-size:10px;font-weight:700;border-radius:999px;padding:0 5px;line-height:1.5}
+.day.td{outline:2px solid var(--ink);outline-offset:-2px}
+.day.sel{outline:3px solid var(--mus);outline-offset:-3px}
+.dlist{display:flex;flex-wrap:wrap;gap:6px 14px;align-items:center;margin-top:12px;padding:12px 14px;background:var(--card);border-left:3px solid var(--tom)}
+.dlist b{font-family:"Zen Old Mincho",serif;margin-right:4px}
+.dlist button{border:0;background:none;padding:6px 0;text-decoration:underline;text-underline-offset:3px}
+/* ---- 作りながら見る ---- */
+.cook{position:fixed;inset:0;z-index:40;background:var(--bg);display:flex;flex-direction:column;padding:max(env(safe-area-inset-top),8px) max(4vw,14px) max(env(safe-area-inset-bottom),16px)}
+.ctop{display:flex;align-items:center;justify-content:space-between;gap:8px;border-bottom:1px solid var(--line);min-height:52px}
+.ctop span{font-family:"Zen Old Mincho",serif;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;text-align:center;flex:1}
+.ctop [aria-pressed=true]{color:var(--tom);font-weight:700}
+.cing{max-height:34vh;overflow:auto;background:light-dark(#f6efe4,#262019);padding:4px 14px;margin-top:10px}
+.cbody{flex:1;display:flex;flex-direction:column;justify-content:center;max-width:760px;width:100%;margin:0 auto;padding:20px 0}
+.cnum{font-family:"Zen Old Mincho",serif;font-weight:900;font-size:clamp(64px,18vw,120px);line-height:1;color:var(--tom)}
+.cnum small{font-size:20px;color:var(--mute);font-weight:500}
+.cbody p{font-size:clamp(22px,5.6vw,34px);line-height:1.75;letter-spacing:.04em;margin:18px 0 0;font-weight:500}
+.cbar{height:3px;background:var(--line);margin-bottom:14px}.cbar i{display:block;height:100%;background:var(--tom);transition:width .3s}
+.cnav{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.6fr);gap:10px;max-width:760px;width:100%;margin:0 auto}
+.cnav .btn{min-height:60px;font-size:17px}
+.cnav .btn:disabled{opacity:.35}
 </style>
 </head>
 <body>
@@ -303,6 +343,89 @@ function compress(file,max,q){return new Promise((ok,ng)=>{
 /* ---------- 一覧 ---------- */
 const lastCooked=r=>(r.cooked||[]).slice().sort().pop()||'';
 const plate=`<svg width="96" height="96" viewBox="0 0 96 96" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><circle cx="48" cy="50" r="30"/><circle cx="48" cy="50" r="20"/><path d="M10 22v18c0 3 2 5 4 5v28M14 22v14M18 22v18c0 3-2 5-4 5M82 22c-5 4-6 12-6 20h6v31"/></svg>`;
+/* ---------- 分量の換算 ---------- */
+let scaleN=null;
+const baseServ=r=>{const m=String(r.servings||'').match(/(\d+(?:\.\d+)?)/);return m?+m[1]:0};
+const FR={'½':.5,'¼':.25,'¾':.75,'⅓':1/3,'⅔':2/3};
+const nice=v=>{const r=Math.round(v*10)/10,w=Math.floor(r),f=+(r-w).toFixed(1);if(f===.5)return w?`${w}と1/2`:'1/2';return String(r)};
+function scaleAmt(a,f){a=String(a||'');if(f===1||/少々|適量|ひとつまみ|お好み/.test(a))return a;
+  return a.replace(/(\d+)\s*\/\s*(\d+)|(\d+(?:\.\d+)?)|[½¼¾⅓⅔]/,(m,n,d,x)=>nice((n?n/d:x?+x:FR[m])*f))}
+
+/* ---------- 台所の記録（カレンダー） ---------- */
+let calYM=today().slice(0,7),calDay=null;
+const pad=n=>String(n).padStart(2,'0');
+function calView(){
+  const [y,m]=calYM.split('-').map(Number),start=new Date(y,m-1,1).getDay(),days=new Date(y,m,0).getDate();
+  const map={};let n=0;recipes.forEach(r=>(r.cooked||[]).forEach(d=>{if(d.startsWith(calYM)){(map[d]=map[d]||[]).push(r);n++}}));
+  const cells=Array(start).fill('<span></span>').concat(Array.from({length:days},(_,i)=>{const k=`${calYM}-${pad(i+1)}`,l=map[k],ph=l&&l.map(photoSrc).find(Boolean);
+    return `<button class="day${l?' on':''}${k===today()?' td':''}${k===calDay?' sel':''}" type="button" data-day="${k}" ${l?'':'disabled'} aria-label="${m}月${i+1}日${l?' '+l.length+'品':''}">${ph?`<img src="${esc(ph)}" alt="" loading="lazy">`:''}<span>${i+1}</span>${l&&l.length>1?`<em>${l.length}</em>`:''}</button>`}));
+  const sel=calDay&&calDay.startsWith(calYM)&&map[calDay];
+  return `<div class="shead"><h2>台所の記録</h2><span>${y}年${m}月は ${n} 回</span>
+    <div class="calnav"><button type="button" data-cal="-1" aria-label="前の月">‹</button><button type="button" data-cal="1" aria-label="次の月">›</button></div></div>
+  <div class="cal"><div class="wk">${'日月火水木金土'.split('').map(w=>`<span>${w}</span>`).join('')}</div><div class="days">${cells.join('')}</div></div>
+  ${sel?`<div class="dlist"><b>${esc(fmt(calDay))}</b>${sel.map(r=>`<button type="button" data-open="${esc(r.id)}">${esc(r.title)} ›</button>`).join('')}</div>`:'<p class="note" style="margin:8px 0 0">写真の日をタップすると、その日に作った料理が出ます。</p>'}`;
+}
+
+/* ---------- 作りながら見る ---------- */
+let cookI=0,cookIng=false,wake=null;
+async function lockOn(){try{wake=await navigator.wakeLock.request('screen')}catch(e){wake=null}}
+function lockOff(){try{wake&&wake.release()}catch(e){}wake=null}
+function cookView(){
+  const r=recipes.find(x=>x.id===cur);if(!r){view='list';return listView()}
+  const st=(r.steps||[]).filter(Boolean),tot=st.length,last=cookI>=tot-1,f=(baseServ(r)&&scaleN)?scaleN/baseServ(r):1;
+  return `<div class="cook" id="cook"><div class="ctop"><button class="btn text" type="button" data-act="cookclose">✕ 閉じる</button><span>${esc(r.title)}</span><button class="btn text" type="button" data-act="cooking" aria-pressed="${cookIng}">材料</button></div>
+    ${cookIng?`<ul class="ing cing">${(r.ingredients||[]).map(i=>`<li><span>${esc(i.name)}</span><span class="amt">${esc(scaleAmt(i.amount,f))}</span></li>`).join('')}</ul>`:''}
+    <div class="cbody"><span class="cnum">${cookI+1}<small> / ${tot}</small></span><p>${esc(st[cookI]||'')}</p></div>
+    <div class="cbar"><i style="width:${(cookI+1)/tot*100}%"></i></div>
+    <div class="cnav"><button class="btn line" type="button" data-act="cprev" ${cookI?'':'disabled'}>‹ 前へ</button><button class="btn acc" type="button" data-act="cnext">${last?'できあがり':'次へ ›'}</button></div></div>`;
+}
+function cookStep(d){const r=recipes.find(x=>x.id===cur),tot=(r.steps||[]).filter(Boolean).length;
+  if(d>0&&cookI>=tot-1){lockOff();go('detail');toast('おつかれさま。「今日も作った」で記録できます');return}
+  cookI=Math.max(0,Math.min(tot-1,cookI+d));render();
+  const b=$('.cbody');if(b&&!RM)b.animate([{opacity:0,transform:`translateX(${d*24}px)`},{opacity:1,transform:'none'}],{duration:260,easing:EO})}
+let tx0=null;
+document.addEventListener('touchstart',e=>{if(view==='cook')tx0=e.touches[0].clientX},{passive:true});
+document.addEventListener('touchend',e=>{if(view!=='cook'||tx0===null)return;const dx=e.changedTouches[0].clientX-tx0;tx0=null;if(Math.abs(dx)>60)cookStep(dx<0?1:-1)},{passive:true});
+document.addEventListener('keydown',e=>{if(view!=='cook')return;if(e.key==='ArrowRight')cookStep(1);if(e.key==='ArrowLeft')cookStep(-1);if(e.key==='Escape'){lockOff();go('detail')}});
+document.addEventListener('visibilitychange',()=>{if(view==='cook'&&document.visibilityState==='visible'&&!wake)lockOn()});
+
+/* ---------- 画像にして送る ---------- */
+function wrapText(g,t,maxW,maxLines){const out=[];let line='';for(const ch of String(t)){if(ch==='\n'){out.push(line);line='';continue}
+  if(g.measureText(line+ch).width>maxW){out.push(line);line=ch}else line+=ch}if(line)out.push(line);
+  if(out.length>maxLines){out.length=maxLines;out[maxLines-1]=out[maxLines-1].slice(0,-1)+'…'}return out}
+function loadImg(src){return new Promise((ok,ng)=>{const i=new Image();i.onload=()=>ok(i);i.onerror=ng;i.src=src})}
+async function shareCard(r){
+  toast('画像を作っています');
+  try{await Promise.all(['900 64px "Zen Old Mincho"','700 30px "Zen Kaku Gothic New"','400 30px "Zen Kaku Gothic New"'].map(f=>document.fonts.load(f)))}catch(e){}
+  const W=1080,H=1350,c=document.createElement('canvas');c.width=W;c.height=H;const g=c.getContext('2d');
+  const M='"Zen Old Mincho","Hiragino Mincho ProN",serif',G='"Zen Kaku Gothic New","Hiragino Sans",sans-serif';
+  g.fillStyle='#fbfaf8';g.fillRect(0,0,W,H);
+  const PH=700,s=photoSrc(r);
+  if(s){try{const im=await loadImg(s);const k=Math.max(W/im.width,PH/im.height),w=im.width*k,h=im.height*k;g.save();g.beginPath();g.rect(0,0,W,PH);g.clip();g.drawImage(im,(W-w)/2,(PH-h)/2,w,h);g.restore()}catch(e){g.fillStyle='#c4412b';g.fillRect(0,0,W,PH)}}
+  else{g.fillStyle='#c4412b';g.fillRect(0,0,W,PH)}
+  const gr=g.createLinearGradient(0,0,0,220);gr.addColorStop(0,'rgba(0,0,0,.45)');gr.addColorStop(1,'rgba(0,0,0,0)');g.fillStyle=gr;g.fillRect(0,0,W,220);
+  g.fillStyle='#fff';g.font=`900 54px ${M}`;g.fillText('私のレシピ本',64,104);
+  g.fillStyle='rgba(255,255,255,.7)';g.fillRect(64,128,W-128,2);
+  let y=PH+70;
+  const tag=(r.tags||[])[0];if(tag){g.font=`700 26px ${G}`;const tw=g.measureText(tag).width;g.fillStyle='#d9a227';g.fillRect(64,y-34,tw+32,46);g.fillStyle='#2a1d00';g.fillText(tag,80,y-2);y+=62}
+  g.fillStyle='#232120';g.font=`900 66px ${M}`;for(const l of wrapText(g,r.title||'',W-128,2)){g.fillText(l,64,y+12);y+=86}
+  g.fillStyle='#c4412b';g.font=`400 34px ${G}`;g.fillText(stars(r.rating)+(r.servings?`　${r.servings}`:''),64,y+6);y+=42;
+  g.fillStyle='#232120';g.fillRect(64,y,W-128,3);y+=52;
+  const ing=(r.ingredients||[]).slice(0,12),col=(W-128-48)/2;g.font=`400 29px ${G}`;
+  ing.forEach((i,n)=>{const cx=64+(n%2)*(col+48),cy=y+Math.floor(n/2)*50;if(cy>H-120)return;
+    g.fillStyle='#232120';g.textAlign='left';g.fillText(wrapText(g,i.name,col-150,1)[0]||'',cx,cy);g.textAlign='right';g.fillStyle='#77716a';g.fillText(i.amount||'',cx+col,cy);g.textAlign='left';
+    g.fillStyle='#e4dfd8';g.fillRect(cx,cy+16,col,2)});
+  y+=Math.ceil(ing.length/2)*50+30;
+  const memo=(r.memo||'').trim();if(memo&&y<H-170){g.font=`500 32px ${M}`;const ml=wrapText(g,memo,W-150,Math.max(1,Math.min(2,Math.floor((H-130-y)/48))));
+    g.fillStyle='#c4412b';g.fillRect(64,y-32,4,ml.length*48-4);g.fillStyle='#232120';ml.forEach((l,n)=>g.fillText(l,86,y+n*48))}
+  g.fillStyle='#77716a';g.font=`400 24px ${G}`;g.fillText(`${(r.cooked||[]).length}回作った一品`,64,H-56);
+  const blob=await new Promise(ok=>c.toBlob(ok,'image/jpeg',.9));if(!blob){toast('画像を作れませんでした');return}
+  const name=`${String(r.title||'recipe').replace(/[\\/:*?"<>|]/g,'')}.jpg`,file=new File([blob],name,{type:'image/jpeg'});
+  try{if(navigator.canShare&&navigator.canShare({files:[file]})){await navigator.share({files:[file],title:r.title});return}}catch(e){if(e&&e.name==='AbortError')return}
+  if(window.claude&&window.claude.use){const dl=await window.claude.use('downloads');if(dl){try{await dl.save({filename:name,data:blob});toast('画像を保存しました')}catch(e){toast('保存を取りやめました')}return}}
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),4000);toast('画像を保存しました');
+}
+
 function coverView(){
   const byRecent=recipes.slice().sort((a,b)=>lastCooked(b).localeCompare(lastCooked(a))||(b.updatedAt||0)-(a.updatedAt||0));
   const top=byRecent.find(r=>photoSrc(r))||byRecent[0];
@@ -338,7 +461,7 @@ function listView(){
       ${fav.memo?`<p>${esc(fav.memo.split('\n')[0].slice(0,70))}</p>`:''}
       <div class="big">${(fav.cooked||[]).length}<span style="font-size:15px;color:var(--mute);font-weight:500"> 回作りました</span></div>
       <p style="margin:8px 0 0"><span class="stars">${stars(fav.rating)}</span></p></div></button>`:'';
-  return coverView()+feature+`<div class="shead"><h2>すべてのレシピ</h2><span>${recipes.length}品</span></div>
+  return coverView()+feature+calView()+`<div class="shead"><h2>すべてのレシピ</h2><span>${recipes.length}品</span></div>
   <div class="tools"><input id="q" type="search" placeholder="料理名や材料で探す" value="${esc(q)}" aria-label="検索">
     <select id="sort" aria-label="並び順">${[['recent','最近作った順'],['rating','評価順'],['count','よく作る順'],['name','名前順']].map(([v,l])=>`<option value="${v}"${v===sortBy?' selected':''}>${l}</option>`).join('')}</select></div>
   ${all.length?`<div class="tags"><button class="chip" type="button" data-tag="" aria-pressed="${!tagF}">すべて</button>${all.map(t=>`<button class="chip" type="button" data-tag="${esc(t)}" aria-pressed="${t===tagF}">${esc(t)}</button>`).join('')}</div>`:'<div style="height:12px"></div>'}
@@ -350,7 +473,8 @@ function listView(){
 function detailView(){
   const r=recipes.find(x=>x.id===cur);if(!r){view='list';return listView()}
   const s=photoSrc(r),ing=r.ingredients||[],grp=k=>ing.filter(i=>(i.kind||'材料')===k);
-  const li=a=>a.map(i=>`<li><span>${esc(i.name)}</span><span class="amt">${esc(i.amount)}</span></li>`).join('');
+  const b=baseServ(r),sn=scaleN||b,f=b?sn/b:1;
+  const li=a=>a.map(i=>`<li><span>${esc(i.name)}</span><span class="amt">${esc(scaleAmt(i.amount,f))}</span></li>`).join('');
   const cooked=(r.cooked||[]).slice().sort().reverse();
   const memo=(r.memo||'').trim();
   return `<div class="spread"><div class="sp-hero">${s?`<img src="${esc(s)}" alt="${esc(r.title)}">`:''}
@@ -359,12 +483,12 @@ function detailView(){
     <div class="sub"><span class="stars" aria-label="評価${r.rating||0}">${stars(r.rating)}</span>${r.servings?`<span>${esc(r.servings)}</span>`:''}<span>${cooked.length}回作った</span>${(r.tags||[]).slice(1).map(t=>`<span>#${esc(t)}</span>`).join('')}</div></div></div></div>
   ${memo?`<p class="lead">${esc(memo)}</p>`:''}
   <div class="cols">
-    <section class="sec box"><h3>材料${r.servings?`<span style="font-size:13px;font-weight:500;color:var(--mute)">（${esc(r.servings)}）</span>`:''}</h3>
+    <section class="sec box"><h3>材料${b?`<span class="scale${f!==1?' chg':''}"><button type="button" data-scale="-1" aria-label="1人分へらす">−</button><span>${nice(sn)}人分</span><button type="button" data-scale="1" aria-label="1人分ふやす">＋</button></span>`:(r.servings?`<span style="font-size:13px;font-weight:500;color:var(--mute)">（${esc(r.servings)}）</span>`:'')}</h3>${f!==1?`<p class="note" style="margin:4px 0 0">${esc(r.servings)}から換算しています</p>`:''}
       ${grp('材料').length?`<ul class="ing">${li(grp('材料'))}</ul>`:''}
       ${grp('調味料').length?`<h4>調味料</h4><ul class="ing">${li(grp('調味料'))}</ul>`:''}
       ${!ing.length?'<p class="note">まだ書いていません</p>':''}
     </section>
-    <section class="sec"><h3>作り方</h3>
+    <section class="sec"><div class="steph"><h3>作り方</h3>${(r.steps||[]).filter(Boolean).length?'<button class="btn dark" type="button" data-act="cook">作りながら見る</button>':''}</div>
       ${(r.steps||[]).filter(Boolean).length?`<ol class="steps">${r.steps.filter(Boolean).map(t=>`<li><span>${esc(t)}</span></li>`).join('')}</ol>`:'<p class="note">まだ書いていません</p>'}
       <div class="ckd"><h3>作った日</h3>
       <p class="count" style="margin:0">これまで <b id="cnt">${cooked.length}</b> 回</p>
@@ -372,7 +496,7 @@ function detailView(){
       <button class="btn acc" type="button" style="margin-top:14px" data-act="cooked" id="cookedBtn"><svg width="18" height="18" viewBox="0 0 24 24"><path fill="currentColor" d="M12 21s-7.5-4.6-9.6-9.3C.9 8.3 3 4.5 6.7 4.5c2.2 0 3.6 1.2 5.3 3.1 1.7-1.9 3.1-3.1 5.3-3.1 3.7 0 5.8 3.8 4.3 7.2C19.5 16.4 12 21 12 21z"/></svg>今日も作った</button></div>
     </section>
   </div>
-  <div class="actions"><button class="btn line" type="button" data-act="edit">編集</button><button class="btn text" type="button" data-act="del">削除</button></div>`;
+  <div class="actions"><button class="btn line" type="button" data-act="share">画像にして送る</button><button class="btn line" type="button" data-act="edit">編集</button><button class="btn text" type="button" data-act="del">削除</button></div>`;
 }
 
 /* ---------- 編集 ---------- */
@@ -447,7 +571,7 @@ $('#importFile').addEventListener('change',async e=>{
 function render(){
   document.body.dataset.view=view;
   const fid=document.activeElement&&document.activeElement.id,pos=fid==='q'?document.activeElement.selectionStart:null,hadEmpty=!!$('#empty');
-  app.innerHTML=view==='detail'?detailView():view==='edit'?editView():view==='settings'?settingsView():listView();
+  app.innerHTML=view==='cook'?cookView():view==='detail'?detailView():view==='edit'?editView():view==='settings'?settingsView():listView();
   if(fid==='q'&&$('#q')){$('#q').focus();$('#q').setSelectionRange(pos,pos)}
   /* Motion Prompt #072 · MIT License (c) 2026 Shohei Ohtaki · https://showheyohtaki.github.io/motion-prompt/#072
      エンプティステート: 0.35秒・直線で、8px下から上げつつ出す */
@@ -467,7 +591,10 @@ async function save(r){r.updatedAt=Date.now();try{await putRecipe(r);return true
 document.addEventListener('click',async e=>{
   const t=e.target.closest('button');if(!t)return;const ds=t.dataset;const r=recipes.find(x=>x.id===cur);
   if(ds.nav){if(ds.nav==='add')startEdit(null);else go(ds.nav);return}
-  if(ds.open){go('detail',ds.open);return}
+  if(ds.open){if(ds.open!==cur)scaleN=null;go('detail',ds.open);return}
+  if(ds.scale&&r){const b=baseServ(r);scaleN=Math.max(1,Math.min(20,(scaleN||b)+ +ds.scale));render();return}
+  if(ds.cal){const [y,m]=calYM.split('-').map(Number),d=new Date(y,m-1+ +ds.cal,1);calYM=`${d.getFullYear()}-${pad(d.getMonth()+1)}`;calDay=null;render();return}
+  if(ds.day){calDay=calDay===ds.day?null:ds.day;render();return}
   if(ds.tag!==undefined){tagF=ds.tag;appear=true;render();return}
   if(ds.kind!==undefined){collect();const i=draft.ingredients[ds.kind];i.kind=i.kind==='調味料'?'材料':'調味料';render();return}
   if(ds.idel!==undefined){collect();draft.ingredients.splice(+ds.idel,1);render();return}
@@ -484,6 +611,12 @@ document.addEventListener('click',async e=>{
     case 'cooked':if(r){bump=true;if(await save({...r,cooked:[...(r.cooked||[]),today()]})){render();burst($('#cookedBtn svg'));toast('今日の日付を記録しました')}else bump=false}break;
     case 'del':if(r)ask(`「${r.title||'このレシピ'}」を削除しますか？`,async()=>{try{await removeRecipe(r.id);go('list');toast('削除しました')}catch(err){toast('削除できませんでした')}});break;
     case 'export':exportAll();break;
+    case 'share':if(r)shareCard(r).catch(()=>toast('画像を作れませんでした'));break;
+    case 'cook':cookI=0;cookIng=false;view='cook';render();lockOn();break;
+    case 'cookclose':lockOff();go('detail');break;
+    case 'cooking':cookIng=!cookIng;render();break;
+    case 'cprev':cookStep(-1);break;
+    case 'cnext':cookStep(1);break;
     case 'import':$('#importFile').click();break;
   }
 });
