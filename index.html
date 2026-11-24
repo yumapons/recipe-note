@@ -6,12 +6,12 @@
 <meta name="theme-color" content="#c4412b">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-title" content="レシピ帳">
-<meta name="description" content="自分で作っておいしかった料理だけを、写真と分量と作った日と一緒に残すレシピ帳。">
-<title>レシピ帳</title>
+<meta name="apple-mobile-web-app-title" content="私のレシピ本">
+<meta name="description" content="自分で作っておいしかった料理だけを、写真と分量と作った日と一緒に残す、私のレシピ本。">
+<title>私のレシピ本</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@600;700;900&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Zen+Old+Mincho:wght@500;700;900&family=Zen+Kaku+Gothic+New:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
 /* VOICE: 個人が作ったていねいな道具。飾りより中身、写真と自分の記録が主役
    IDEA: 台所に置いた一冊のノート。表紙は「最近作った一品」の写真
@@ -25,15 +25,15 @@
 --acc:light-dark(#b8432f,#e8735d)}
 :root[data-theme=light]{color-scheme:light}:root[data-theme=dark]{color-scheme:dark}
 *{box-sizing:border-box;min-width:0}
-body{margin:0;background:var(--bg);color:var(--ink);font:15.5px/1.75 "Noto Sans JP","Hiragino Sans",system-ui,sans-serif;overflow-x:clip;-webkit-text-size-adjust:100%}
-h1,h2,h3{font-family:"Noto Serif JP","Hiragino Mincho ProN",serif;font-weight:700;line-height:1.3;text-wrap:balance;margin:0}
+body{margin:0;background:var(--bg);color:var(--ink);font:15.5px/1.75 "Zen Kaku Gothic New","Hiragino Sans",system-ui,sans-serif;overflow-x:clip;-webkit-text-size-adjust:100%}
+h1,h2,h3{font-family:"Zen Old Mincho","Hiragino Mincho ProN",serif;font-weight:700;line-height:1.3;text-wrap:balance;margin:0}
 button,input,textarea,select{font:inherit;color:inherit}
 button{cursor:pointer;-webkit-tap-highlight-color:transparent}
 :focus-visible{outline:2px solid var(--acc);outline-offset:2px}
 .wrap{max-width:1040px;margin:0 auto}
 .bar{position:sticky;top:0;z-index:10;background:color-mix(in srgb,var(--bg) 92%,transparent);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border-bottom:1px solid var(--line);padding:0 max(4vw,14px)}
 .bar .wrap{display:flex;align-items:center;justify-content:space-between;gap:10px;min-height:56px}
-.logo{font-family:"Noto Serif JP",serif;font-weight:700;font-size:19px;border:0;background:none;padding:0}
+.logo{font-family:"Zen Old Mincho",serif;font-weight:700;font-size:19px;border:0;background:none;padding:0}
 .bar nav{display:flex;gap:6px}
 main{padding:20px max(4vw,14px) 64px}
 .btn{min-height:44px;border-radius:8px;border:0;padding:0 18px;font-weight:500;display:inline-flex;align-items:center;justify-content:center;gap:6px;white-space:nowrap}
@@ -53,7 +53,7 @@ main{padding:20px max(4vw,14px) 64px}
 .cover p{margin:10px 0 0;color:var(--mute)}
 .stats{display:flex;gap:22px;margin-top:18px;flex-wrap:wrap}
 .stats div{font-size:13px;color:var(--mute)}
-.stats b{display:block;font-family:"Noto Serif JP",serif;font-size:26px;color:var(--ink);line-height:1.2}
+.stats b{display:block;font-family:"Zen Old Mincho",serif;font-size:26px;color:var(--ink);line-height:1.2}
 /* list */
 .tools{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px}
 .tools input,.tools select{min-height:44px;border:1px solid var(--line);border-radius:8px;background:var(--card);padding:0 12px;font-size:16px}
@@ -87,9 +87,9 @@ main{padding:20px max(4vw,14px) 64px}
 .ing .amt{white-space:nowrap;text-align:right}
 .steps{margin:0;padding:0;list-style:none;counter-reset:s}
 .steps li{counter-increment:s;display:grid;grid-template-columns:30px minmax(0,1fr);gap:8px;padding:10px 0;border-bottom:1px dashed var(--line)}
-.steps li::before{content:counter(s);font-family:"Noto Serif JP",serif;font-weight:700;color:var(--acc)}
+.steps li::before{content:counter(s);font-family:"Zen Old Mincho",serif;font-weight:700;color:var(--acc)}
 .memo{background:var(--soft);padding:14px 16px;white-space:pre-wrap;margin-top:6px;border-radius:6px}
-.count b{display:inline-block;font-size:28px;font-family:"Noto Serif JP",serif;color:var(--acc);vertical-align:-4px;overflow:hidden}
+.count b{display:inline-block;font-size:28px;font-family:"Zen Old Mincho",serif;color:var(--acc);vertical-align:-4px;overflow:hidden}
 .log{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
 .log span{display:inline-flex;align-items:center;border:1px solid var(--line);border-radius:6px;padding:0 0 0 10px;font-size:13.5px;white-space:nowrap;background:var(--card)}
 .log button{border:0;background:none;width:32px;height:32px;color:var(--mute)}
@@ -136,7 +136,7 @@ main{padding-top:0}
 .cv::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.5) 0%,rgba(0,0,0,0) 34%,rgba(0,0,0,0) 48%,rgba(0,0,0,.72) 100%)}
 .cv>*{position:relative;z-index:1}
 .mast{display:flex;align-items:flex-end;justify-content:space-between;gap:10px;border-bottom:1px solid rgba(255,255,255,.65);padding-bottom:8px}
-.mast b{font-family:"Noto Serif JP",serif;font-weight:900;font-size:clamp(44px,13vw,92px);line-height:.95;letter-spacing:-.02em}
+.mast b{font-family:"Zen Old Mincho",serif;font-weight:900;font-size:clamp(44px,13vw,92px);line-height:.95;letter-spacing:-.02em}
 .mast span{font-size:12px;text-align:right;line-height:1.5;white-space:nowrap}
 .cvlines{max-width:620px}
 .cvlines small{display:inline-block;background:var(--mus);color:#2a1d00;font-weight:700;font-size:12.5px;padding:2px 10px;margin-bottom:10px}
@@ -146,7 +146,7 @@ main{padding-top:0}
 .cvlines li::before{content:"―";margin-right:6px;color:var(--mus)}
 .cvlines button{all:unset;cursor:pointer}
 .badge{position:absolute;right:max(4vw,14px);top:clamp(120px,30vw,180px);width:96px;height:96px;border-radius:50%;background:var(--mus);color:#2a1d00;display:grid;place-items:center;text-align:center;line-height:1.15;font-size:12px;font-weight:700;box-shadow:0 8px 18px -6px rgba(0,0,0,.45);will-change:transform;z-index:2}
-.badge b{display:block;font-family:"Noto Serif JP",serif;font-size:32px;font-weight:900}
+.badge b{display:block;font-family:"Zen Old Mincho",serif;font-size:32px;font-weight:900}
 .cvempty{position:absolute;inset:auto 0 0 0;height:60%;display:grid;place-items:center;color:rgba(255,255,255,.35)}
 .shead{display:flex;align-items:baseline;gap:12px;border-top:3px solid var(--ink);padding-top:10px;margin:34px 0 16px}
 .shead h2{font-size:clamp(22px,4.6vw,30px);font-weight:900}
@@ -158,7 +158,7 @@ main{padding-top:0}
 .kick{color:var(--tom);font-size:12.5px;font-weight:700}
 .feat h3{font-size:clamp(24px,4.6vw,34px);font-weight:900;margin:6px 0 10px}
 .feat p{margin:0 0 12px;color:var(--mute);font-size:14px}
-.feat .big{font-family:"Noto Serif JP",serif;font-weight:900;font-size:44px;color:var(--tom);line-height:1}
+.feat .big{font-family:"Zen Old Mincho",serif;font-weight:900;font-size:44px;color:var(--tom);line-height:1}
 .grid .card .kick{margin-top:9px;display:block}
 .grid .card h3{margin-top:2px;font-size:17px;font-weight:700}
 .grid .ph{aspect-ratio:4/5;border-radius:0}
@@ -175,7 +175,7 @@ main{padding-top:0}
 .sp-hero .sub{color:rgba(255,255,255,.9)}
 .sp-hero .stars{color:var(--mus)}
 .sp-back{position:absolute;left:max(4vw,14px);top:14px;z-index:2;background:rgba(0,0,0,.35);color:#fff;border-radius:999px;min-height:40px}
-.lead{font-family:"Noto Serif JP",serif;font-size:clamp(17px,2.6vw,20px);line-height:1.9;margin:24px 0 0;padding-left:14px;border-left:3px solid var(--tom)}
+.lead{font-family:"Zen Old Mincho",serif;font-size:clamp(17px,2.6vw,20px);line-height:1.9;margin:24px 0 0;padding-left:14px;border-left:3px solid var(--tom)}
 .box{background:light-dark(#f6efe4,#262019);padding:18px 18px 8px}
 .box h3{border-bottom:1px solid var(--ink);padding-bottom:6px}
 .steps li{grid-template-columns:44px minmax(0,1fr)}
@@ -183,11 +183,44 @@ main{padding-top:0}
 .ckd{margin-top:22px;border-top:3px solid var(--ink);padding-top:12px}
 #app>.back:first-child{margin-top:16px}
 body[data-view=list] .logo{visibility:hidden}
+/* ---- 書体・行間の調整 ---- */
+body{font-size:16px;line-height:1.9;letter-spacing:.03em;font-feature-settings:"palt" 0}
+h1,h2,h3{line-height:1.4;letter-spacing:.04em;font-feature-settings:"palt"}
+.logo{font-size:17px;font-weight:700;letter-spacing:.08em}
+.mast{align-items:flex-end}
+.mast b{font-family:"Zen Old Mincho",serif;font-weight:900;font-size:clamp(46px,13.5vw,96px);line-height:1.04;letter-spacing:.04em}
+.mast span{font-size:12px;letter-spacing:.06em;line-height:1.7}
+.cvlines small{letter-spacing:.08em}
+.cvlines h1{font-size:clamp(30px,7.4vw,54px);line-height:1.3;letter-spacing:.06em}
+.cvlines p{font-size:15px;line-height:1.8}
+.cvlines ul{font-size:14.5px;line-height:1.9;gap:0}
+.badge{font-size:11.5px;letter-spacing:.06em;top:clamp(168px,40vw,250px)}
+.badge b{font-family:"Zen Old Mincho",serif;font-size:34px;line-height:1.1;letter-spacing:0}
+.shead{margin:40px 0 18px}
+.shead h2{font-size:clamp(22px,4.8vw,30px);letter-spacing:.08em}
+.kick{font-size:12px;letter-spacing:.1em}
+.feat h3{font-size:clamp(25px,5vw,36px);line-height:1.35;letter-spacing:.06em}
+.feat p{font-size:14.5px;line-height:1.9}
+.grid .card h3{font-size:16.5px;line-height:1.5;letter-spacing:.04em;font-weight:700}
+.grid .card:nth-child(5n+1) h3{font-size:clamp(21px,4.4vw,28px);line-height:1.35}
+.meta{font-size:12px;letter-spacing:.04em}
+.sp-hero h2{font-size:clamp(34px,8.4vw,62px);line-height:1.25;letter-spacing:.06em}
+.lead{font-family:"Zen Old Mincho",serif;font-size:clamp(17px,2.8vw,20px);line-height:2.05;letter-spacing:.06em;font-weight:500}
+.sec h3{font-size:20px;letter-spacing:.1em}
+.ing li{line-height:1.7;padding:10px 0}
+.ing .amt{font-feature-settings:"tnum";letter-spacing:.02em}
+.steps li{line-height:1.95;padding:14px 0}
+.steps li::before{font-family:"Zen Old Mincho",serif;font-size:32px}
+.memo{line-height:1.95}
+.count b{font-family:"Zen Old Mincho",serif;font-size:32px}
+.btn{letter-spacing:.06em}
+.in{letter-spacing:.02em}
+
 </style>
 </head>
 <body>
 <header class="bar"><div class="wrap">
-  <button class="logo" type="button" data-nav="list">レシピ帳</button>
+  <button class="logo" type="button" data-nav="list">私のレシピ本</button>
   <nav><button class="btn text" type="button" data-nav="settings">設定</button><button class="btn acc" type="button" data-nav="add">＋ 書く</button></nav>
 </div></header>
 <main><div class="wrap" id="app"></div></main>
@@ -279,7 +312,7 @@ function coverView(){
   const s=top&&photoSrc(top);
   return `<section class="mag"><div class="cv">
     ${s?`<img src="${esc(s)}" alt="">`:`<div class="cvempty">${plate.replace('width="96" height="96"','width="200" height="200"')}</div>`}
-    <div class="mast"><b>レシピ帳</b><span>${d.getFullYear()}年${d.getMonth()+1}月号<br>収録 ${recipes.length} 品</span></div>
+    <div class="mast"><b>私の<br>レシピ本</b><span>${d.getFullYear()}年${d.getMonth()+1}月号<br>収録 ${recipes.length} 品</span></div>
     <div class="badge" aria-label="今月作った回数"><div>今月<b>${month}</b>回</div></div>
     <div class="cvlines">
       <small>${top&&lastCooked(top)?`最近作った一品 · ${esc(fmtS(lastCooked(top)))}`:'最近作った一品'}</small>
